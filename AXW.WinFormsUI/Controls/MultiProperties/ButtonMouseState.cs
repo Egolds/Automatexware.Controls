@@ -7,9 +7,9 @@ using System.Windows.Forms;
 namespace AXW.WinFormsUI.Controls.MultiProperties
 {
     [TypeConverter(typeof(ButtonMouseStateConverter))]
-    public sealed class ButtonMouseState // : PropertyTabAttribute
+    public class ButtonMouseState
     {
-        public ButtonMouseState(Control owner)
+        internal ButtonMouseState(Control owner)
         {
             this.owner = owner;
         }
@@ -19,7 +19,7 @@ namespace AXW.WinFormsUI.Controls.MultiProperties
         private Color borderColor;
         private Color fontColor;
 
-        [Browsable(true), ApplicableToColorState, EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true), ApplicableToButtonMouseState, NotifyParentProperty(true), EditorBrowsable(EditorBrowsableState.Always)]
         public Color BackColor
         {
             get => backColor; set
@@ -29,7 +29,7 @@ namespace AXW.WinFormsUI.Controls.MultiProperties
             }
         }
 
-        [Browsable(true), ApplicableToColorState, EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true), ApplicableToButtonMouseState, NotifyParentProperty(true), EditorBrowsable(EditorBrowsableState.Always)]
         public Color BorderColor
         {
             get => borderColor; set
@@ -39,8 +39,8 @@ namespace AXW.WinFormsUI.Controls.MultiProperties
             }
         }
 
-        // NotifyParentProperty(true), RefreshProperties(RefreshProperties.All)
-        [Browsable(true), ApplicableToColorState, EditorBrowsable(EditorBrowsableState.Always)]
+        // RefreshProperties(RefreshProperties.All)
+        [Browsable(true), ApplicableToButtonMouseState, NotifyParentProperty(true), EditorBrowsable(EditorBrowsableState.Always)]
         public Color FontColor
         {
             get => fontColor; set
@@ -50,10 +50,6 @@ namespace AXW.WinFormsUI.Controls.MultiProperties
             }
         }
 
-        private void OnPropertyChanged()
-        {
-            owner?.Refresh();
-            //owner?.Invalidate();
-        }
+        private void OnPropertyChanged() => owner?.Refresh();
     }
 }

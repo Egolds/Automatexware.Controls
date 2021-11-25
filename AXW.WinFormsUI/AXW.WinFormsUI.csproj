@@ -54,7 +54,7 @@
     <Compile Include="Controls\BaseControls\BaseCustomControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\MultiProperties\Attributes\ApplicableToButtonAttribute.cs" />
+    <Compile Include="Controls\MultiProperties\Attributes\ApplicableToButtonMouseStateAttribute.cs" />
     <Compile Include="Controls\MultiProperties\ButtonMouseState.cs" />
     <Compile Include="Controls\MultiProperties\ControlDesigners\ButtonDesigner.cs" />
     <Compile Include="Controls\MultiProperties\Converters\ButtonMouseStateConverter.cs" />

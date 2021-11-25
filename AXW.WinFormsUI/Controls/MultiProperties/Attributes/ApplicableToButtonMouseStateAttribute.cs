@@ -2,7 +2,7 @@
 
 namespace AXW.WinFormsUI.Controls.MultiProperties.Attributes
 {
-    internal sealed class ApplicableToColorStateAttribute : Attribute
+    internal sealed class ApplicableToButtonMouseStateAttribute : Attribute
     {
     }
 }

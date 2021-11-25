@@ -22,7 +22,7 @@ namespace AXW.WinFormsUI.Controls.MultiProperties.Converters
             {
                 Attribute[] array = new Attribute[attributes.Length + 1];
                 attributes.CopyTo(array, 0);
-                array[attributes.Length] = new ApplicableToColorStateAttribute();
+                array[attributes.Length] = new ApplicableToButtonMouseStateAttribute();
                 attributes = array;
             }
             return TypeDescriptor.GetProperties(value, attributes);

@@ -32,9 +32,7 @@ namespace AXW.WinFormsUI.Controls
     {
         #region Properties
 
-        [Category("AXW")]
-        //[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        //[RefreshProperties(RefreshProperties.All)]
+        [Category("AXW"), Browsable(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ButtonMouseState OnIdleState
         {
             get => onIdleState;
@@ -45,7 +43,7 @@ namespace AXW.WinFormsUI.Controls
             }
         }
 
-        [Category("AXW")]
+        [Category("AXW"), Browsable(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ButtonMouseState OnHoverState
         {
             get => onHoverState;
@@ -56,7 +54,7 @@ namespace AXW.WinFormsUI.Controls
             }
         }
 
-        [Category("AXW")]
+        [Category("AXW"), Browsable(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ButtonMouseState OnPressedState
         {
             get => onPressedState;
@@ -122,8 +120,16 @@ namespace AXW.WinFormsUI.Controls
         private StringFormat stringFormat = new StringFormat()
         {
             Alignment = StringAlignment.Center,
-            LineAlignment = StringAlignment.Center
+            LineAlignment = StringAlignment.Center,
+            Trimming = StringTrimming.EllipsisCharacter
         };
+        private TextFormatFlags textFormatFlags =
+                    TextFormatFlags.HorizontalCenter |
+                    TextFormatFlags.VerticalCenter |
+                    TextFormatFlags.LeftAndRightPadding |
+                    TextFormatFlags.WordBreak |
+                    TextFormatFlags.TextBoxControl;
+
         private bool borderVisible = true;
         private ButtonMouseState onHoverState;
         private ButtonMouseState onPressedState;
@@ -167,9 +173,11 @@ namespace AXW.WinFormsUI.Controls
 
             graph.SmoothingMode = SmoothingMode.HighQuality;
             graph.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            //graph.PixelOffsetMode = PixelOffsetMode.HighQuality;
             graph.Clear(Parent.BackColor);
 
             Rectangle btnRectange = new Rectangle(0, 0, Width - 1, Height - 1);
+            Rectangle btnTextRectangale = new Rectangle(2, 2, Width - 3, Height - 3);
             Rectangle btnFocusRectange = new Rectangle(1, 1, btnRectange.Width - 2, btnRectange.Height - 2);
 
             Color backColor = GetBackColor();
@@ -187,7 +195,14 @@ namespace AXW.WinFormsUI.Controls
 
             graph.SetClip(btnRectange);
 
-            graph.DrawString(Text, Font, new SolidBrush(foreColor), btnRectange, stringFormat);
+            if (UseCompatibleTextRendering == true)
+            {
+                graph.DrawString(Text, Font, new SolidBrush(foreColor), btnTextRectangale, stringFormat);
+            }
+            else
+            {
+                TextRenderer.DrawText(graph, Text, Font, btnTextRectangale, foreColor, textFormatFlags);
+            }
         }
 
         #region Private Methods

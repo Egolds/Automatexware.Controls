@@ -10,7 +10,7 @@ namespace AXW.WinFormsUI.Controls.BaseControls
     {
         [Browsable(false)]
         public bool IsMousePressed { get; private set; }
-        
+
         [Browsable(false)]
         public bool IsMouseOver { get; private set; }
 
@@ -68,6 +68,28 @@ namespace AXW.WinFormsUI.Controls.BaseControls
 
             IsMousePressed = false;
             Invalidate();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs kevent)
+        {
+            base.OnKeyDown(kevent);
+
+            if (kevent.KeyCode == Keys.Space)
+            {
+                IsMousePressed = true;
+                Invalidate();
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs kevent)
+        {
+            base.OnKeyUp(kevent);
+
+            if (kevent.KeyCode == Keys.Space)
+            {
+                IsMousePressed = false;
+                Invalidate();
+            }
         }
     }
 }

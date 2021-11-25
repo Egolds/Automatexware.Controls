@@ -52,6 +52,15 @@ namespace AXW.WinFormsUI.Tester
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.button1.Location = new System.Drawing.Point(131, 146);
             this.button1.Name = "button1";
+            this.button1.OnHoverState.BackColor = System.Drawing.Color.Silver;
+            this.button1.OnHoverState.BorderColor = System.Drawing.Color.DarkGray;
+            this.button1.OnHoverState.FontColor = System.Drawing.Color.Black;
+            this.button1.OnIdleState.BackColor = System.Drawing.Color.Gainsboro;
+            this.button1.OnIdleState.BorderColor = System.Drawing.Color.DarkGray;
+            this.button1.OnIdleState.FontColor = System.Drawing.Color.Black;
+            this.button1.OnPressedState.BackColor = System.Drawing.Color.DarkGray;
+            this.button1.OnPressedState.BorderColor = System.Drawing.Color.DarkGray;
+            this.button1.OnPressedState.FontColor = System.Drawing.Color.Black;
             this.button1.Size = new System.Drawing.Size(110, 30);
             this.button1.TabIndex = 2;
             this.button1.Text = "button1";
@@ -59,11 +68,21 @@ namespace AXW.WinFormsUI.Tester
             // 
             // button3
             // 
+            this.button3.BorderVisible = false;
             this.button3.FocusColor = System.Drawing.Color.LightSkyBlue;
             this.button3.FocusVisible = true;
             this.button3.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.button3.Location = new System.Drawing.Point(189, 182);
             this.button3.Name = "button3";
+            this.button3.OnHoverState.BackColor = System.Drawing.Color.Green;
+            this.button3.OnHoverState.BorderColor = System.Drawing.Color.Empty;
+            this.button3.OnHoverState.FontColor = System.Drawing.Color.White;
+            this.button3.OnIdleState.BackColor = System.Drawing.Color.Tomato;
+            this.button3.OnIdleState.BorderColor = System.Drawing.Color.Empty;
+            this.button3.OnIdleState.FontColor = System.Drawing.Color.White;
+            this.button3.OnPressedState.BackColor = System.Drawing.Color.RoyalBlue;
+            this.button3.OnPressedState.BorderColor = System.Drawing.Color.DarkGray;
+            this.button3.OnPressedState.FontColor = System.Drawing.Color.White;
             this.button3.Size = new System.Drawing.Size(110, 30);
             this.button3.TabIndex = 3;
             this.button3.Text = "button3";

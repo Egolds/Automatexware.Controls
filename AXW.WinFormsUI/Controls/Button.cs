@@ -1,4 +1,5 @@
-﻿using AXW.WinFormsUI.Controls.BaseControls;
+﻿using AXW.WinFormsUI.Common;
+using AXW.WinFormsUI.Controls.BaseControls;
 using AXW.WinFormsUI.Controls.MultiProperties;
 using AXW.WinFormsUI.Controls.MultiProperties.ControlDesigners;
 using System;
@@ -14,9 +15,9 @@ using System.Windows.Forms;
 /*
  
 TODO:
-BorderRadius
+BorderRadius                    +++
 AutoColorsGeneration
-TextAligment
+TextAligment                    +++
 TextOffset
 Images (Left, Right) / Aligment
 ImageOffset
@@ -77,6 +78,33 @@ namespace AXW.WinFormsUI.Controls
         }
 
         [Category("AXW")]
+        [DefaultValue(1)]
+        public int BorderRadius
+        {
+            get => borderRadius; set
+            {
+                if (value > 0 && value <= 100)
+                {
+                    borderRadius = value;
+                    Refresh();
+                }
+                Refresh();
+            }
+        }
+
+        [Category("AXW")]
+        [DefaultValue(false)]
+        public bool MakeTransparentCorners
+        {
+            get => makeTransparentCorners; set
+            {
+                makeTransparentCorners = value;
+                Region = null;
+                Refresh();
+            }
+        }
+
+        [Category("AXW")]
         [DefaultValue(false)]
         public bool FocusVisible
         {
@@ -93,6 +121,27 @@ namespace AXW.WinFormsUI.Controls
             get => focusColor; set
             {
                 focusColor = value;
+                Refresh();
+            }
+        }
+
+        [Category("AXW")]
+        public Color GeneralStatesColor
+        {
+            get => generalStatesColor; set
+            {
+                generalStatesColor = value;
+                Refresh();
+            }
+        }
+
+        [Category("AXW")]
+        [DefaultValue(false)]
+        public bool GeneralStatesColorEnabled
+        {
+            get => generalStatesColorEnabled; set
+            {
+                generalStatesColorEnabled = value;
                 Refresh();
             }
         }
@@ -117,25 +166,16 @@ namespace AXW.WinFormsUI.Controls
 
         #region Private Fields
 
-        private StringFormat stringFormat = new StringFormat()
-        {
-            Alignment = StringAlignment.Center,
-            LineAlignment = StringAlignment.Center,
-            Trimming = StringTrimming.EllipsisCharacter
-        };
-        private TextFormatFlags textFormatFlags =
-                    TextFormatFlags.HorizontalCenter |
-                    TextFormatFlags.VerticalCenter |
-                    TextFormatFlags.LeftAndRightPadding |
-                    TextFormatFlags.WordBreak |
-                    TextFormatFlags.TextBoxControl;
-
         private bool borderVisible = true;
         private ButtonMouseState onHoverState;
         private ButtonMouseState onPressedState;
         private ButtonMouseState onIdleState;
         private bool focusVisible;
         private Color focusColor;
+        private int borderRadius;
+        private bool makeTransparentCorners;
+        private Color generalStatesColor = FlatColors.Purple;
+        private bool generalStatesColorEnabled;
 
         #endregion
 
@@ -162,7 +202,9 @@ namespace AXW.WinFormsUI.Controls
                 FontColor = Color.Black
             };
 
-            FocusColor = Color.LightSkyBlue;
+            focusColor = Color.LightSkyBlue;
+            borderRadius = 1;
+            FlatStyle = FlatStyle.Flat;
         }
 
         protected override void OnPaint(PaintEventArgs pevent)
@@ -176,33 +218,58 @@ namespace AXW.WinFormsUI.Controls
             //graph.PixelOffsetMode = PixelOffsetMode.HighQuality;
             graph.Clear(Parent.BackColor);
 
-            Rectangle btnRectange = new Rectangle(0, 0, Width - 1, Height - 1);
+            RectangleF btnRectange = new RectangleF(0, 0, Width - 1, Height - 1);
             Rectangle btnTextRectangale = new Rectangle(2, 2, Width - 3, Height - 3);
-            Rectangle btnFocusRectange = new Rectangle(1, 1, btnRectange.Width - 2, btnRectange.Height - 2);
+            RectangleF btnFocusRectange = RectangleF.Inflate(btnRectange, -1, -1); // new RectangleF(1, 1, btnRectange.Width - 2, btnRectange.Height - 2);
 
             Color backColor = GetBackColor();
-            Color borderColor = GetBorderColor();
             Color foreColor = GetForeColor();
+            Pen borderPen = GetBorderPen();
+            SolidBrush backBrush = new SolidBrush(backColor);
 
-            // Основной прямоугольник (Фон)
-            graph.DrawRectangle(new Pen(borderColor), btnRectange);
-            graph.FillRectangle(new SolidBrush(backColor), btnRectange);
+            var borderRadiusSize = Height / 100F * BorderRadius;
 
-            if (FocusVisible == true && Focused == true)
+            GraphicsPath btnPath = DrawHelper.GetRoundedRectangleF(btnRectange, borderRadiusSize);
+            GraphicsPath btnFocusPath = DrawHelper.GetRoundedRectangleF(btnFocusRectange, borderRadiusSize);
+
+            if (MakeTransparentCorners == true)
             {
-                graph.DrawRectangle(new Pen(FocusColor), btnFocusRectange);
+                RectangleF outRectangeF = RectangleF.Inflate(btnRectange, 0.65F, 0.65F);
+                GraphicsPath outPath = DrawHelper.GetRoundedRectangleF(outRectangeF, borderRadiusSize);
+                Region = new Region(outPath);
+                outPath.Dispose();
             }
 
-            graph.SetClip(btnRectange);
+            #region Draw Button
+
+            graph.FillPath(backBrush, btnPath);
+            if (FocusVisible == true && Focused == true && IsMouseOver == false)
+            {
+                graph.DrawPath(borderPen, btnFocusPath);
+            }
+            graph.DrawPath(borderPen, btnPath);
+
+            #endregion
+
+            #region Draw Text
 
             if (UseCompatibleTextRendering == true)
             {
+                var stringFormat = CreateStringFormat();
                 graph.DrawString(Text, Font, new SolidBrush(foreColor), btnTextRectangale, stringFormat);
             }
             else
             {
+                var textFormatFlags = CreateTextFormatFlags();
                 TextRenderer.DrawText(graph, Text, Font, btnTextRectangale, foreColor, textFormatFlags);
             }
+
+            #endregion
+
+            btnPath.Dispose();
+            btnFocusPath.Dispose();
+            borderPen.Dispose();
+            backBrush.Dispose();
         }
 
         #region Private Methods
@@ -265,7 +332,7 @@ namespace AXW.WinFormsUI.Controls
 
             if (Enabled == false)
             {
-                color = Color.FromArgb(150, OnIdleState.FontColor);
+                color = Color.FromArgb(100, OnIdleState.FontColor);
             }
             else
             {
@@ -282,6 +349,27 @@ namespace AXW.WinFormsUI.Controls
 
             return color;
         }
+
+        private Pen GetBorderPen()
+        {
+            Pen borderPen = null;
+
+            if (FocusVisible == true && Focused == true && Enabled == true)
+            {
+                borderPen = new Pen(FocusColor);
+                //borderPen.Width = IsMouseOver ? 1 : 2;
+            }
+            else
+            {
+                borderPen = new Pen(GetBorderColor());
+            }
+
+            return borderPen;
+        }
+
+        #endregion
+
+        #region Events
 
 
 

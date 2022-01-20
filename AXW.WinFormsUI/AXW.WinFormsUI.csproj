@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ColorsHelper.cs" />
+    <Compile Include="Common\ControlHelper.cs" />
+    <Compile Include="Common\DrawHelper.cs" />
     <Compile Include="Common\FlatColors.cs" />
     <Compile Include="Controls\Button.cs">
       <SubType>Component</SubType>

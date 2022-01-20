@@ -99,6 +99,19 @@ namespace AXW.WinFormsUI.Tester
         private void button2_Click_1(object sender, EventArgs e)
         {
             button1.OnIdleState.BackColor = FlatColors.Green;
+
+            
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            frmMain f = new frmMain();
+            f.ShowDialog();
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+
         }
 
         Rectangle Left { get { return new Rectangle(0, 0, _, this.ClientSize.Height); } }

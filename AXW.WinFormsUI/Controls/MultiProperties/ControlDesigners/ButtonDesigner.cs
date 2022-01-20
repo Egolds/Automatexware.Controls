@@ -9,6 +9,11 @@ namespace AXW.WinFormsUI.Controls.MultiProperties.ControlDesigners
         {
             base.PostFilterProperties(properties);
             properties.Remove("BackColor");
+            properties.Remove("BackgroundImage");
+            properties.Remove("BackgroundImageLayout");
+            properties.Remove("FlatStyle");
+            properties.Remove("FlatAppearance");
+            properties.Remove("UseVisualStyleBackColor");
         }
     }
 }
